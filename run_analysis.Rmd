@@ -1,0 +1,153 @@
+---
+title: "Codebook for run_analysis.R"
+author: "Jeffrey Norton"
+date: "January 19, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cache=FALSE, echo = FALSE}
+read_chunk("run_analysis.R")
+```
+
+# Overview
+
+The code downloads data, averages the measurements for each activity, and then
+outputs the cleaned up "tidy" data.  The activity is described at
+[this site](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones).
+
+# Steps
+## Download the data
+The dataset is downloaded from the internet to the local working directory.
+Then, the dataset is unzipped.
+```{r download, eval=TRUE, cache=TRUE}
+```
+
+## Read the Data.
+Data is unzipped into the directory "UCI HAR Dataset" in the local working directory.
+The data consists of the sensor data in the *.X files in each of the test and
+train subdirectories, a corresponding index file *.y (in each of the test and
+train subdirectories) which indicates which data row in the *.X file corresponds
+to which of the six activities, and a label file which gives labels for each of
+the six activities.
+```{r readdata, eval=TRUE, cache=TRUE}
+```
+
+## Merge the Data
+Merge the X data.sets and the y data.sets.
+
+```{r mergedata, eval=TRUE, cache=TRUE}
+```
+
+## Clean the Data
+Clean the data.
+```{r cleandata, eval=TRUE, cache=TRUE}
+```
+The objective in cleaning the data is to get the mean and standard deviations
+for all subjects performing each of the six activities.  To do that, we use
+the index file to select each set of activities.  Then, the code gets a mean
+and standard deviation for each of the subjects (561 of them making 561 columns).
+The mean for all subjects forms a row of data (same for the standard deviation)
+which is added to a new data.frame - either mean.df or sd.df
+
+## Assign Labels
+```{r assignlabels, eval=TRUE, cache=TRUE}
+```
+At this point, the six rows of mean.df and sd.df which correspond to the
+activities are not properly labeled.  This code labels them.
+
+## Write out the Tidy Data File
+```{r tidydata, eval=TRUE, cache=TRUE}
+```
+The mean.df data.frame representing the average value for each subject (561 columns)
+performing each activity (6 rows) is written into the directory "UCI HAR Dataset"
+as a CSV file which can be opened directly by Microsoft Excel or other spreadsheet
+applications capable of reading csv files.
+
+Also, for Microsoft Excel users, an xlsx file is generated with both the mean
+and standard deviation data in two separate sheets.
+
+## Explanation of Data
+From [the site](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones) and the README file extracted from the zip file, each of the 561 columns
+are time and frequency variables and each of the features is normalized to be within
+the range [-1, 1].  Time is measured in seconds and frequency is measured in Hertz.
+
+The features_info.txt file defines each of the 17 specific measures making up the 33
+data sets (for 561 columns).  For completeness, we include that file here which defines the feature selection.
+
+### Feature Selection
+The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. 
+
+Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). 
+
+Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
+
+These signals were used to estimate variables of the feature vector for each pattern:  
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+
+tBodyAcc-XYZ<br>
+tGravityAcc-XYZ<br>
+tBodyAccJerk-XYZ<br>
+tBodyGyro-XYZ<br>
+tBodyGyroJerk-XYZ<br>
+tBodyAccMag<br>
+tGravityAccMag<br>
+tBodyAccJerkMag<br>
+tBodyGyroMag<br>
+tBodyGyroJerkMag<br>
+fBodyAcc-XYZ<br>
+fBodyAccJerk-XYZ<br>
+fBodyGyro-XYZ<br>
+fBodyAccMag<br>
+fBodyAccJerkMag<br>
+fBodyGyroMag<br>
+fBodyGyroJerkMag<br>
+
+The set of variables that were estimated from these signals are: 
+
+mean(): Mean value<br>
+std(): Standard deviation<br>
+mad(): Median absolute deviation<br> 
+max(): Largest value in array<br>
+min(): Smallest value in array<br>
+sma(): Signal magnitude area<br>
+energy(): Energy measure. Sum of the squares divided by the number of values.<br> 
+iqr(): Interquartile range <br>
+entropy(): Signal entropy<br>
+arCoeff(): Autorregresion coefficients with Burg order equal to 4<br>
+correlation(): correlation coefficient between two signals<br>
+maxInds(): index of the frequency component with largest magnitude<br>
+meanFreq(): Weighted average of the frequency components to obtain a mean frequency<br>
+skewness(): skewness of the frequency domain signal <br>
+kurtosis(): kurtosis of the frequency domain signal <br>
+bandsEnergy(): Energy of a frequency interval within the 64 bins of the FFT of each window.<br>
+angle(): Angle between to vectors.<br>
+
+Additional vectors obtained by averaging the signals in a signal window sample. These are used on the angle() variable:
+
+gravityMean<br>
+tBodyAccMean<br>
+tBodyAccJerkMean<br>
+tBodyGyroMean<br>
+tBodyGyroJerkMean<br>
+
+The complete list of variables of each feature vector is available in 'features.txt'
+
+
+## Output Data
+### Row and Column Labels
+```{r labels, eval=TRUE, cache=TRUE}
+```
+
+### Mean
+```{r mean, eval=TRUE, cache=TRUE}
+```
+
+### Standard Deviations
+```{r sd, eval=TRUE, cache=TRUE}
+```
